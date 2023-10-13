@@ -2,10 +2,9 @@ package handler
 
 import (
 	"StockTrading/pkg/fetching"
-	"encoding/json"
+	"StockTrading/pkg/utils"
 	"fmt"
 	"github.com/gorilla/mux"
-	"log"
 	"net/http"
 )
 
@@ -19,23 +18,9 @@ func FetchStock(w http.ResponseWriter, r *http.Request) {
 
 	s, err := fetching.GetStockInfo(symbol)
 	if err != nil {
-		respond(w, &response{msg: err.Error()}, http.StatusInternalServerError)
+		utils.Respond(w, &utils.Response{Msg: err.Error()}, http.StatusInternalServerError)
 		return
 	}
 
-	respond(w, s, http.StatusOK)
-}
-
-func respond(w http.ResponseWriter, data any, status int) {
-	w.Header().Add("Content-Type", "application/json")
-	w.WriteHeader(status)
-
-	err := json.NewEncoder(w).Encode(data)
-	if err != nil {
-		log.Println(err)
-	}
-}
-
-type response struct {
-	msg string
+	utils.Respond(w, s, http.StatusOK)
 }

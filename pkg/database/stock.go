@@ -10,18 +10,13 @@ type Stock struct {
 	OwnerId  int
 }
 
-func (s *Stock) Buy() (int, error) {
-	res, err := db.Exec("INSERT INTO stock (symbol, amount, buy_price, owner_id) VALUES ($1, $2, $3, $4)", s.Symbol, s.Amount, s.BuyPrice, s.OwnerId)
+func (s *Stock) Buy() error {
+	_, err := db.Exec("INSERT INTO stock (symbol, amount, buy_price, owner_id) VALUES ($1, $2, $3, $4)", s.Symbol, s.Amount, s.BuyPrice, s.OwnerId)
 	if err != nil {
-		return 0, fmt.Errorf("couldn't insert a stock: %v", err)
+		return fmt.Errorf("couldn't insert a stock: %v", err)
 	}
 
-	id, err := res.LastInsertId()
-	if err != nil {
-		return 0, fmt.Errorf("couldn't get the id: %v", err)
-	}
-
-	return int(id), nil
+	return nil
 }
 
 func GetBuyOwner(ownerId int) ([]*Stock, error) {

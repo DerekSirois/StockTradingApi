@@ -8,18 +8,13 @@ type Users struct {
 	Password []byte
 }
 
-func (u *Users) Create() (int, error) {
-	res, err := db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", u.Username, u.Password)
+func (u *Users) Create() error {
+	_, err := db.Exec("INSERT INTO users (username, password) VALUES ($1, $2)", u.Username, u.Password)
 	if err != nil {
-		return 0, fmt.Errorf("couldn't insert user: %v", err)
+		return fmt.Errorf("couldn't insert user: %v", err)
 	}
 
-	id, err := res.LastInsertId()
-	if err != nil {
-		return 0, fmt.Errorf("couldn't get the id: %v", err)
-	}
-
-	return int(id), nil
+	return nil
 }
 
 func GetByUsername(name string) (*Users, error) {

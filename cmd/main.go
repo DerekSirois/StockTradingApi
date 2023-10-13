@@ -1,6 +1,7 @@
 package main
 
 import (
+	"StockTrading/pkg/auth"
 	"StockTrading/pkg/database"
 	"StockTrading/pkg/handler"
 	"github.com/gorilla/mux"
@@ -13,7 +14,9 @@ func main() {
 	router := mux.NewRouter()
 
 	router.HandleFunc("/", handler.Index).Methods("GET")
-	router.HandleFunc("/fetch/{symbol}", handler.FetchStock).Methods("GET")
+	router.HandleFunc("/login", handler.Login).Methods("POST")
+	router.HandleFunc("/register", handler.Register).Methods("POST")
+	router.HandleFunc("/fetch/{symbol}", auth.VerifyJWT(handler.FetchStock)).Methods("GET")
 
 	err := database.InitDb()
 	handleError(err)
