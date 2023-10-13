@@ -18,6 +18,8 @@ func main() {
 	router.HandleFunc("/register", handler.Register).Methods("POST")
 	router.HandleFunc("/fetch/{symbol}", auth.VerifyJWT(handler.FetchStock)).Methods("GET")
 
+	router.HandleFunc("/buy", auth.VerifyJWT(handler.BuyStock)).Methods("POST")
+
 	err := database.InitDb()
 	handleError(err)
 
