@@ -6,7 +6,7 @@ type Stock struct {
 	Id       int
 	Symbol   string
 	Amount   int
-	BuyPrice float32
+	BuyPrice float32 `db:"buy_price"`
 	OwnerId  int
 }
 
@@ -19,9 +19,9 @@ func (s *Stock) Create() error {
 	return nil
 }
 
-func GetBuyOwner(ownerId int) ([]*Stock, error) {
+func GetBuyByOwner(ownerId int) ([]*Stock, error) {
 	s := make([]*Stock, 0)
-	err := db.Select(s, "SELECT * from stock where owner_id = $1", ownerId)
+	err := db.Select(&s, "SELECT symbol, sum(amount) as amount, sum(buy_price * amount) as buy_price from stock where owner_id = $1 group by symbol", ownerId)
 
 	return s, err
 }
