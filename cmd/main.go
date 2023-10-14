@@ -19,6 +19,7 @@ func main() {
 	router.HandleFunc("/fetch/{symbol}", auth.VerifyJWT(handler.FetchStock)).Methods("GET")
 
 	router.HandleFunc("/buy", auth.VerifyJWT(handler.BuyStock)).Methods("POST")
+	router.HandleFunc("/sell", auth.VerifyJWT(handler.SellStock)).Methods("POST")
 
 	err := database.InitDb()
 	handleError(err)
